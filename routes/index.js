@@ -22,6 +22,8 @@ router.param('quizId', quizController.load);
 router.get('/quizzes',                     quizController.index);
 router.get('/quizzes/:quizId(\\d+)',       quizController.show);
 router.get('/quizzes/new',                 quizController.new);
+router.get('/quizzes/randomplay',          quizController.randomplay);
+router.get('/quizzes/randomcheck/:quizId?answer=respuesta', quizController.randomcheck)
 router.post('/quizzes',                    quizController.create);
 router.get('/quizzes/:quizId(\\d+)/edit',  quizController.edit);
 router.put('/quizzes/:quizId(\\d+)',       quizController.update);

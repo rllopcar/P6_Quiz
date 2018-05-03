@@ -151,5 +151,36 @@ exports.check = (req, res, next) => {
         quiz,
         result,
         answer
-    });
+    })
 };
+
+
+// GET /quizzes/randomplay
+exports.randomplay = (req, res, next) => {
+    quizzes = ""
+    models.quiz.findAll().then(resp => {
+        if (resp) {
+            var quizzes = resp
+            let rand = parseInt(Math.random() * quizzes.length)
+            var quiz =  quizzes[rand]
+            console.log(JSON.stringify(quizzes))
+            console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", quiz.question)
+            const score = 0
+            res.render('random_play',{
+                score,
+                quiz
+            });
+        } else {
+            throw new Error('There is no quizzes in de tha database');
+        }
+       
+    })
+
+    
+};
+
+// GET /quizzes/randomcheck/:quizId?answer=respuesta
+exports.randomcheck = (req, res, next) => {
+    var quiz = models.quiz.find
+}
+
