@@ -154,18 +154,38 @@ exports.check = (req, res, next) => {
     })
 };
 
-
 // GET /quizzes/randomplay
 exports.randomplay = (req, res, next) => {
     quizzes = ""
+    
     models.quiz.findAll().then(resp => {
+        req.session.total = resp.length
+        var score = 0
+        var aux = []
+        if (req.session.arrayIdContestadas.length > 0){
+            score = req.session.arrayIdContestadas.length
+        } else {
+            req.session.arrayIdContestadas = []
+            var i;
+            for (i = 0; i<resp.length; i++){
+                    aux.push(resp[i])
+            }
+        }
+        console.log('JFJFJAFVFVFEGTBVJJJJJJAAJAJAJAJAAJJAJ',JSON.stringify(aux))
+        var i = 0
         if (resp) {
-            var quizzes = resp
-            let rand = parseInt(Math.random() * quizzes.length)
-            var quiz =  quizzes[rand]
-            console.log(JSON.stringify(quizzes))
-            console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", quiz.question)
-            const score = 0
+            for (i = 0; i<resp.length; i++){
+                var j
+                for (j = 0; j<req.session.arrayIdContestadas.length; j++){
+                    if(req.session.arrayIdContestadas[j] !== resp[i].id){
+                        // aqui guardamos los quizzes que no se han contestado
+                        aux.push(resp[i])
+                    }
+                }
+            }
+            let rand = parseInt(Math.random() * aux.length)
+            var quiz =  aux[rand]
+            score = req.session.arrayIdContestadas.length
             res.render('random_play',{
                 score,
                 quiz
@@ -173,14 +193,47 @@ exports.randomplay = (req, res, next) => {
         } else {
             throw new Error('There is no quizzes in de tha database');
         }
-       
     })
-
-    
 };
 
 // GET /quizzes/randomcheck/:quizId?answer=respuesta
 exports.randomcheck = (req, res, next) => {
+    
     var quiz = models.quiz.find
+    var quizId = req.params.quizId
+    var answer = req.query.answer
+
+    models.quiz.findById(quizId)
+    .then(quiz => {
+        score = req.session.arrayIdContestadas.length
+        let result = true
+        if (quiz.answer == answer) {
+            //guardo el id de la pregunta para que no se repita
+            req.session.arrayIdContestadas.push(quiz.id)
+            score = req.session.arrayId.length
+            if (score == req.session.total) {
+                req.session.arrayIdContestadas = []
+                res.render('random_nomore',{
+                    score
+                })
+            } else {
+                res.render('random_result', {
+                    score,
+                    answer,
+                    result
+                })
+            }
+        } else {
+            // Borro los datos de session para poder volver a jugar
+            req.session.arrayIdContestadas = []
+            result = false
+            res.render('random_result',{
+               score,
+               answer,
+               result
+            })
+        }
+    })
+    .catch(error => next(error));
 }
 
