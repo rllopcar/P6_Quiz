@@ -162,9 +162,11 @@ exports.randomplay = (req, res, next) => {
         req.session.total = resp.length
         var score = 0
         var aux = []
-        if (req.session.arrayIdContestadas.length > 0){
-            score = req.session.arrayIdContestadas.length
+        if (req.session.arrayIdContestadas == []) {
+                console.log("PORRRQQQUUUEEE COJOOOONEESSS SE MEEETEEE AQUIII ====>", JSON.stringify(req.session.arrayIdContestadas))
+                score = req.session.arrayIdContestadas.length
         } else {
+            console.log("ESSSS LLLAAA PUTTTAAA PRIMMEERRAAA VEEEEZZZZ JJJJOOOODDDEEERRR ====>>>> REESSPP", JSON.stringify(resp))
             req.session.arrayIdContestadas = []
             var i;
             for (i = 0; i<resp.length; i++){
@@ -210,7 +212,7 @@ exports.randomcheck = (req, res, next) => {
         if (quiz.answer == answer) {
             //guardo el id de la pregunta para que no se repita
             req.session.arrayIdContestadas.push(quiz.id)
-            score = req.session.arrayId.length
+            score = req.session.arrayIdContestadas.length
             if (score == req.session.total) {
                 req.session.arrayIdContestadas = []
                 res.render('random_nomore',{
