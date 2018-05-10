@@ -165,15 +165,16 @@ exports.randomplay = (req, res, next) => {
 
         console.log("\n")
         console.log("\n")
-        console.log(JSON.stringify(req.session.arrayIdContestadas))
-        console.log(req.session.arrayIdContestadas.length)
+        //req.session.destroy();
+        //console.log(JSON.stringify(req.session.arrayIdContestadas))
+        //console.log(req.session.arrayIdContestadas.length)
         console.log("\n")
         console.log("\n")
         console.log(typeof(req.session.arrayIdContestadas))
         console.log("\n")
         console.log("\n")
 
-        if (req.session.arrayIdContestadas == []) {
+        if (req.session.arrayIdContestadas == undefined) {
             console.log("ESSSS LLLAAA PUTTTAAA PRIMMEERRAAA VEEEEZZZZ JJJJOOOODDDEEERRR ====>>>> REESSPP", JSON.stringify(resp))
             req.session.arrayIdContestadas = []
             var i;
