@@ -163,50 +163,20 @@ exports.randomplay = (req, res, next) => {
         var score = 0
         var aux = []
 
-        console.log("\n")
-        console.log("\n")
-        //req.session.destroy();
-        //console.log(JSON.stringify(req.session.arrayIdContestadas))
-        //console.log(req.session.arrayIdContestadas.length)
-        console.log("\n")
-        console.log("\n")
-        console.log(typeof(req.session.arrayIdContestadas))
-        console.log("\n")
-        console.log("\n")
-
         if (req.session.arrayIdContestadas == undefined) {
-            console.log("ESSSS LLLAAA PUTTTAAA PRIMMEERRAAA VEEEEZZZZ JJJJOOOODDDEEERRR ====>>>> REESSPP", JSON.stringify(resp))
             req.session.arrayIdContestadas = []
             var i;
             for (i = 0; i<resp.length; i++){
                     aux.push(resp[i])
             }
         } else {
-            console.log("PORRRQQQUUUEEE COJOOOONEESSS SE MEEETEEE AQUIII ====>", JSON.stringify(req.session.arrayIdContestadas))
-            var i;
             for (i = 0; i<resp.length; i++){
                     aux.push(resp[i])
             }
                 score = req.session.arrayIdContestadas.length
            
         }
-        
-        console.log("\n")
-        console.log("\n")
-        console.log("\n")
-        
-        console.log("\n")
-        console.log("\n")
-        console.log("\n")
-        console.log(JSON.stringify(aux))
-        console.log("\n")
-        console.log("\n")
-        console.log("EL SCORE ESTANDO EN RANDOMPLAY ES", score)
-        console.log("\n")
-        console.log("\n")
-        console.log("ARRAY CONTESTADAS",JSON.stringify(req.session.arrayIdContestadas))
-        console.log("LONGITUD ARRAYCONTESTADAS",req.session.arrayIdContestadas.length)
-        console.log("\n")
+
         var i = 0
         if (resp) {
             for (i = 0; i<resp.length; i++){
@@ -218,12 +188,7 @@ exports.randomplay = (req, res, next) => {
                     }
                 }
             }
-            console.log("\n")
-            console.log("\n")
-            console.log(JSON.stringify(aux))
-            console.log("\n")
-            console.log("\n")
-
+           
             let rand = parseInt(Math.random() * aux.length)
             var quiz =  aux[rand]
             score = req.session.arrayIdContestadas.length
@@ -250,17 +215,11 @@ exports.randomcheck = (req, res, next) => {
         let result = true
         if (quiz.answer == answer) {
             //guardo el id de la pregunta para que no se repita
-            console.log("PRRRREEGGUNNTTAAA ACERRTADAA ANNNTEESSS",JSON.stringify(req.session.arrayIdContestadas),"\n")
+           
             req.session.arrayIdContestadas.push(quiz.id)
-            console.log("PRRRREEGGUNNTTAAA ACERRTADAA DESPUESSS",JSON.stringify(req.session.arrayIdContestadas),"\n")
             score = req.session.arrayIdContestadas.length
             if (score == req.session.total) {
-                console.log("\n")
-                console.log("\n")
-                console.log("EELLL SCCOOOREEE ESS =>", score)
-                console.log("ELLL TOOOTALLLL ESSS =>", req.session.total)
-                console.log("\n")
-                console.log("\n")
+                
                 req.session.arrayIdContestadas = []
                 res.render('random_nomore',{
                     score
@@ -273,12 +232,6 @@ exports.randomcheck = (req, res, next) => {
                 })
             }
         } else {
-            // Borro los datos de session para poder volver a jugar
-            console.log("\n")
-                console.log("\n")
-                console.log("RESPUUESTTAA INCOORREEECTAAA GAMME OVVERRR =>", score)
-                console.log("\n")
-                console.log("\n")
             req.session.arrayIdContestadas = []
             result = false
             res.render('random_result',{
