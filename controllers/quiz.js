@@ -176,21 +176,36 @@ exports.randomplay = (req, res, next) => {
                 score = req.session.arrayIdContestadas.length
            
         }
-
-        var i = 0
+        
+        
         if (resp) {
-            for (i = 0; i<resp.length; i++){
-                var j
-                for (j = 0; j<req.session.arrayIdContestadas.length; j++){
-                    if(req.session.arrayIdContestadas[j] !== resp[i].id){
-                        // aqui guardamos los quizzes que no se han contestado
-                        aux.push(resp[i])
-                    }
+            // creo un array de ids
+            var ids = []
+            var y
+            for (y = 0; y<resp.length; y++) {
+                ids.push(resp[y].id)
+            }
+            
+            if (req.session.arrayIdContestadas.length > 0) {
+                aux = resp
+            }
+            var i
+            for (j = 0; j<aux.length; j++) {
+                var i
+                for (i=0; i<req.session.arrayIdContestadas.length; i++){
+                    if(aux[j].id == req.session.arrayIdContestadas[i]) {
+                        aux.splice(j,1)
+                    }            
                 }
             }
-           
+            for (i = 0; i<aux.length; i++){
+                console.log("\n")
+                console.log("IDs GUARDADOS", aux[i].id)
+            
+            }
             let rand = parseInt(Math.random() * aux.length)
             var quiz =  aux[rand]
+            
             score = req.session.arrayIdContestadas.length
             res.render('random_play',{
                 score,
