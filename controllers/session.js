@@ -43,7 +43,6 @@ exports.deleteExpiredUserSession = (req, res, next) => {
 // this value is maintained.
 //
 exports.loginRequired = (req, res, next) => {
-    console.log("EL ID DEL USUARIO LOGEADO ES", req.session.user.id)
     if (req.session.user) {
         next();
     } else {
