@@ -21,11 +21,16 @@
                     </a>
 
                 <% } %>
-                
-                <a href="/quizzes/<%= quiz.id %>/tips/<%= tip.id %>/edit">
-                    <button>Edit</button>
-                </a>
-                
+                <% if (!accepted && (isAdmin || isTipAuthor)) { %>
+                    <a href="/quizzes/<%= quiz.id %>/tips/<%= tip.id %>/edit">
+                        <button>Edit</button>
+                    </a>
+                    <% } else { %>
+                        <a href="/session">
+                            <button>Edit</button>
+                        </a>
+                    <% } %>
+                    
                 <% if (isAdmin || isTipAuthor) { %>
                     <a href="/quizzes/<%= quiz.id %>/tips/<%= tip.id %>/edit">
                         <button>Edit</button>
