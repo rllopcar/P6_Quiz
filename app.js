@@ -49,6 +49,7 @@ app.use(flash());
 app.use(function(req, res, next) {
 
     // To use req.session in the views
+    //LE PASO CONTENIDO A LAS VISTAS COMO OBJETO SESSION
     res.locals.session = req.session;
 
     next();

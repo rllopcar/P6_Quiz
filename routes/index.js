@@ -120,8 +120,10 @@ router.delete('/quizzes/:quizId(\\d+)',
 router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
+// RUTAS P6_Quiz
 router.get('/quizzes/randomplay',          quizController.randomplay);
 router.get('/quizzes/randomcheck/:quizId', quizController.randomcheck);
+
 
 
 router.post('/quizzes/:quizId(\\d+)/tips',
@@ -136,5 +138,15 @@ router.delete('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
     quizController.adminOrAuthorRequired,
     tipController.destroy);
 
+// RUTAS P8_Quiz
+router.get('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/edit',
+    sessionController.loginRequired,
+    tipController.adminOrAuthorRequired,
+    tipController.edit);
+
+router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)',
+    sessionController.loginRequired,
+    tipController.adminOrAuthorRequired,
+    tipController.update);
 
 module.exports = router;
