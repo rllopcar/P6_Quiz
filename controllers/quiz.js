@@ -44,6 +44,15 @@ exports.adminOrAuthorRequired = (req, res, next) => {
     }
 };
 
+// adminAreFrobidden
+exports.adminsAreForbidden = (req, res, next)  => {
+    // compruebo si exise el usuario registrado en la sesión y si .isAdmin es igual a True
+    if (req.session.user.isAdmin) {
+        res.sendStatus(403)
+    } else {
+        next()
+    }
+}
 
 // GET /quizzes
 exports.index = (req, res, next) => {
@@ -233,64 +242,62 @@ exports.check = (req, res, next) => {
 
 // GET /quizzes/randomplay
 exports.randomplay = (req, res, next) => {
-   quizzes = ""
+    quizzes = ""
    
-   models.quiz.findAll().then(resp => {
-       req.session.total = resp.length
-       var score = 0
-       var aux = []
+    models.quiz.findAll({
+            include: [
+                {
+                    model: models.tip,
+                    include: [
+                        {model: models.user, as: 'author'}
+                    ]
+                },
+                {model: models.user, as: 'author'}
+            ]
+    }).then(resp => {
+            if (resp) {
+                req.session.total = 3
+                var score = 0
+                var aux = []
+                var preguntasSINcontestar = []
+                // creo array de todos los ids
+                var ids =  []
+                for (var i=0; i<resp.length; i++){
+                    ids.push(resp[i].id)
+                }
+                if (req.session.arrayIdContestadas == undefined || req.session.arrayIdContestadas.length<1) {
+                    req.session.arrayIdContestadas = []
+                    var i;
+                    aux = resp
+                    console.log("CUANDO SE EMPIEZA A JUGAR")
+                } else {
+                    console.log("UNA VEZ SE HA CONTESTADO BIEN A UNA PREGUNTA")
+                    var aux = []
+                    aux = resp
+                    for (var j = 0; j<aux.length; j++) {
+                        for (var i=0; i<req.session.arrayIdContestadas.length; i++){
+                            console.log("EL ID ES",aux[j].id)
+                            if(aux[j].id === req.session.arrayIdContestadas[i]) {
+                                aux.splice(j,1)
+                            }            
+                        }
+                    }
+                }
 
-       if (req.session.arrayIdContestadas == undefined) {
-           req.session.arrayIdContestadas = []
-           var i;
-           for (i = 0; i<resp.length; i++){
-                   aux.push(resp[i])
-           }
-       } else {
-           for (i = 0; i<resp.length; i++){
-                   aux.push(resp[i])
-           }
-               score = req.session.arrayIdContestadas.length
-          
-       }
-       
-       
-       if (resp) {
-           // creo un array de ids
-           var ids = []
-           var y
-           for (y = 0; y<resp.length; y++) {
-               ids.push(resp[y].id)
-           }
-           
-           if (req.session.arrayIdContestadas.length > 0) {
-               aux = resp
-           }
-           var i
-           for (j = 0; j<aux.length; j++) {
-               var i
-               for (i=0; i<req.session.arrayIdContestadas.length; i++){
-                   if(aux[j].id == req.session.arrayIdContestadas[i]) {
-                       aux.splice(j,1)
-                   }            
-               }
-           }
-           for (i = 0; i<aux.length; i++){
-               console.log("\n")
-               console.log("IDs GUARDADOS", aux[i].id)
-           
-           }
-           let rand = parseInt(Math.random() * aux.length)
-           var quiz =  aux[rand]
-           
-           score = req.session.arrayIdContestadas.length
-           res.render('random_play',{
-               score,
-               quiz
-           });
-       } else {
-           throw new Error('There is no quizzes in the database');
-       }
+            for (var i = 0; i<aux.length; i++){
+                console.log(aux.id)
+            }
+            let rand = parseInt(Math.random() * aux.length)
+            var quiz =  aux[rand]
+            
+            score = req.session.arrayIdContestadas.length
+            res.render('random_play',{
+                score,
+                quiz
+            });
+        } else {
+            throw new Error('There is no quizzes in the database');
+        }
    })
 };
 
@@ -298,30 +305,29 @@ exports.randomplay = (req, res, next) => {
 exports.randomcheck = (req, res, next) => {
    
    var quiz = models.quiz.find
+   console.log("QUUEE ESTA PASANDO", quiz)
    var quizId = req.params.quizId
    var answer = req.query.answer
 
    models.quiz.findById(quizId)
    .then(quiz => {
-       score = req.session.arrayIdContestadas.length
-       let result = true
-       if (quiz.answer == answer) {
-
-           req.session.arrayIdContestadas.push(quiz.id)
-           score = req.session.arrayIdContestadas.length
-           if (score == req.session.total) {
-               
+        score = req.session.arrayIdContestadas.length
+        if (quiz.answer === answer) {
+            req.session.arrayIdContestadas.push(quiz.id)
+            score = req.session.arrayIdContestadas.length
+            if (score == req.session.total) {
                req.session.arrayIdContestadas = []
                res.render('random_nomore',{
                    score
                })
-           } else {
-               res.render('random_result', {
-                   score,
-                   answer,
-                   result
-               })
-           }
+            } else {
+                let result = true
+                res.render('random_result', {
+                    score,
+                    answer,
+                    result
+                })
+            }
        } else {
            req.session.arrayIdContestadas = []
            result = false

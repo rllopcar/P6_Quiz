@@ -5,7 +5,6 @@ const {models} = require("../models");
 // Autoload the tip with id equals to :tipId
 exports.load = (req, res, next, tipId) => {
 
-
     models.tip.findById(tipId)
     .then(tip => {
         if (tip) {
@@ -26,12 +25,7 @@ exports.adminOrAuthorRequired = (req, res , next) => {
     // Cada vez que en la ruta se pasa un userID, quizId o tipId se pasa por el controller autoload que guarda en la request el valor 
     // que sea para poder acceder a el
     const isAuthor = req.session.user.id === req.tip.authorId;
-    console.log(+"\n")
-    console.log(+"\n")
-    console.log("EL ID DEL USUARIO QUE ESTA LOGEADO ES ==>", req.session.user.id );
-    console.log("El ID DEL AUTOR DE LA TIP ES ==>", req.tip.authorId);
-    console.log(+"\n")
-    console.log(+"\n")
+
     if(isAdmin || isAuthor) {
         next();
     } else {

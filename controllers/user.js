@@ -53,11 +53,25 @@ exports.index = (req, res, next) => {
 
 // GET /users/:userId
 exports.show = (req, res, next) => {
-
+    
     const {user} = req;
 
-    res.render('users/show', {user});
-};
+    models.user.findById(user.id, {
+
+        include: [ 
+            models.quiz,
+            models.tip
+        ]
+        }).then(user => {
+            var nquizzes = JSON.parse(JSON.stringify(user.quizzes)).length
+            var ntips = JSON.parse(JSON.stringify(user.tips)).length
+            res.render('users/show', {
+                user,
+                nquizzes,
+                ntips 
+            });
+    })
+}
 
 
 // GET /users/new

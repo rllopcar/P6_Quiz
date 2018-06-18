@@ -116,12 +116,16 @@ router.delete('/quizzes/:quizId(\\d+)',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
 	quizController.destroy);
-
-router.get('/quizzes/:quizId(\\d+)/play',  quizController.play);
+router.get('/quizzes/:quizId(\\d+)/play',  
+    quizController.adminsAreForbidden,
+    quizController.play);
 router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 
 // RUTAS P6_Quiz
-router.get('/quizzes/randomplay',          quizController.randomplay);
+router.get('/quizzes/randomplay', 
+    sessionController.loginRequired,
+    quizController.adminsAreForbidden,         
+    quizController.randomplay);
 router.get('/quizzes/randomcheck/:quizId', quizController.randomcheck);
 
 

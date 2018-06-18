@@ -23,8 +23,26 @@ module.exports = {
                 updatedAt: new Date()
             },
             {
-                question: 'Capital of France',
-                answer: 'Paris',
+                question: 'Capital of Germany',
+                answer: 'Berlin',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                question: 'Capital of England',
+                answer: 'London',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                question: 'Capital of Finland',
+                answer: 'Helsinki',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                question: '1 + 1',
+                answer: '1',
                 createdAt: new Date(),
                 updatedAt: new Date()
             }

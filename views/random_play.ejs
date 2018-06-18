@@ -2,6 +2,10 @@
     Random Play:
 </h1>
 
+<div class="right">
+    <small> (by <%= quiz.author ? quiz.author.username : "Anonymous" %>) </small>
+</div>
+
 <div>
     Successful answers = <span id="score"><%= score %></span>
 </div>
@@ -11,6 +15,16 @@
     <p>
         Question: <b><%= quiz.question %></b>
     </p>
+    
+    <h2>Tips:</h2>
+        <ul>
+        <% for (let tip of quiz.tips) { %>
+    <li>
+        <%= tip.text %> 
+    </li>
+        <% } %>
+    </ul>
+
 
 
     <div class="wideRow">

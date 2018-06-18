@@ -65,6 +65,9 @@ exports.adminRequired = (req, res, next) => {
     }
 };
 
+
+
+
 // MW that allows to pass only if the logged in user is:
 // - admin
 // - or is the user to be managed.
